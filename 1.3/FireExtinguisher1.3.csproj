@@ -59,7 +59,6 @@
   <ItemGroup>
     <Compile Include="CastUtils.cs" />
     <Compile Include="CompatibilityUtils.cs" />
-    <Compile Include="TweakUtils.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="InventoryUtils.cs" />
     <Compile Include="JobDefOf_ExtinguishFire.cs" />

@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RimWorld;
 using Verse;
 using Verse.AI;
 
@@ -14,6 +15,11 @@ namespace FireExtinguisher
             harmony.Patch(
                 original: AccessTools.Method(typeof(Pawn_JobTracker), "EndCurrentJob"),
                 prefix: new HarmonyMethod(typeof(HarmonyPatches), "EndCurrentJob")
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(ShieldBelt), "AllowVerbCast"),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), "ShieldBeltAllowVerbCast")
             );
 
             if (CompatibilityUtils.SimpleSidearmsInstalled)
@@ -44,6 +50,14 @@ namespace FireExtinguisher
                 }
             }
             return true;
+        }
+
+        public static void ShieldBeltAllowVerbCast(ref bool __result, Verb verb)
+        {
+            if (InventoryUtils.CheckDefName(verb.EquipmentSource.def.defName))
+            {
+                __result = true;
+            }
         }
 
         public static void SimpleSidearmsStatCalculatorPatch(ThingWithComps weapon, ref float __result)
