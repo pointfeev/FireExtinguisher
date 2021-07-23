@@ -62,7 +62,6 @@ namespace FireExtinguisher
             }
             if (fireExtinguisher != null)
             {
-                TweakUtils.Apply(fireExtinguisher);
                 CompatibilityUtils.SimpleSidearmsDefaultCheck(pawn);
                 return true;
             }
@@ -78,8 +77,6 @@ namespace FireExtinguisher
             }
             else
             {
-                TweakUtils.Unapply(fireExtinguisher);
-
                 ThingWithComps previousEq = previousEquipped.TryGetValue(pawn);
                 if (previousEq != null)
                 {

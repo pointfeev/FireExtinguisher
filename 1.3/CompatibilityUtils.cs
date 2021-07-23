@@ -32,5 +32,29 @@ namespace FireExtinguisher
             }
             catch { }
         }
+
+        public static bool CombatExtendedInstalled = (from mod in ModLister.AllInstalledMods
+                                                      where mod.Active && mod.PackageId.ToLower() == "ceteam.combatextended"
+                                                      select mod).Any<ModMetaData>();
+
+        public static bool CombatExtendedAmmoCheck(ThingWithComps thingWithComps)
+        {
+            if (!CombatExtendedInstalled) { return true; }
+            try { return DoCombatExtendedAmmoCheck(thingWithComps); } catch { }
+            return true;
+        }
+
+        private static bool DoCombatExtendedAmmoCheck(ThingWithComps thingWithComps)
+        {
+            if (!CombatExtendedInstalled) { return true; }
+            try
+            {
+                CombatExtended.CompAmmoUser comp = thingWithComps.TryGetComp<CombatExtended.CompAmmoUser>();
+                if (comp == null) return true;
+                return !comp.UseAmmo || comp.CurMagCount > 0 || comp.HasAmmo;
+            }
+            catch { }
+            return true;
+        }
     }
 }

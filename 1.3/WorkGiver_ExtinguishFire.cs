@@ -28,7 +28,7 @@ namespace FireExtinguisher
 				{
 					return false;
 				}
-				if ((pawn2.Faction == pawn.Faction || pawn2.HostFaction == pawn.Faction || pawn2.HostFaction == pawn.HostFaction) && !pawn.Map.areaManager.Home[fire.Position] && IntVec3Utility.ManhattanDistanceFlat(pawn.Position, pawn2.Position) > 15)
+				if ((pawn2.Faction == pawn.Faction || pawn2.HostFaction == pawn.Faction || pawn2.HostFaction == pawn.HostFaction) /*&& !pawn.Map.areaManager.Home[fire.Position]*/ && IntVec3Utility.ManhattanDistanceFlat(pawn.Position, pawn2.Position) > 15)
 				{
 					return false;
 				}

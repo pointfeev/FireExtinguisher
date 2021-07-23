@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Verse;
 
 namespace FireExtinguisher
@@ -53,7 +52,8 @@ namespace FireExtinguisher
                 CombatExtended.CompAmmoUser comp = thingWithComps.TryGetComp<CombatExtended.CompAmmoUser>();
                 if (comp == null) return true;
                 return !comp.UseAmmo || comp.CurMagCount > 0 || comp.HasAmmo;
-            } catch { }
+            }
+            catch { }
             return true;
         }
     }

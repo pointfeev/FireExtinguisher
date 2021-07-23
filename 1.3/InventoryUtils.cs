@@ -15,7 +15,7 @@ namespace FireExtinguisher
 
         public static ThingWithComps GetEquippedFireExtinguisher(Pawn pawn)
         {
-            if (pawn.equipment.Primary != null && CheckDefName(pawn.equipment.Primary.def.defName))
+            if (pawn.equipment.Primary != null && CheckDefName(pawn.equipment.Primary.def.defName) && CompatibilityUtils.CombatExtendedAmmoCheck(pawn.equipment.Primary))
             {
                 return pawn.equipment.Primary;
             }
@@ -25,7 +25,7 @@ namespace FireExtinguisher
         public static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn)
         {
             ThingWithComps fireExtinguisher = (from thing in pawn.inventory.innerContainer
-                                               where thing is ThingWithComps && CheckDefName(thing.def.defName)
+                                               where thing is ThingWithComps && CheckDefName(thing.def.defName) && CompatibilityUtils.CombatExtendedAmmoCheck(thing as ThingWithComps)
                                                orderby thing.MarketValue descending
                                                select thing).FirstOrDefault<Thing>() as ThingWithComps;
             if (fireExtinguisher != null)
