@@ -41,6 +41,7 @@
     </Reference>
     <Reference Include="CombatExtended">
       <HintPath>..\..\CombatExtended\Assemblies\CombatExtended.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SimpleSidearms">
       <HintPath>..\..\SimpleSidearms\v1.2\Assemblies\SimpleSidearms.dll</HintPath>
