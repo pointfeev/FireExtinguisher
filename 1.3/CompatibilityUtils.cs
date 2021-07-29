@@ -11,7 +11,7 @@ namespace FireExtinguisher
 
         public static void SimpleSidearmsDefaultCheck(Pawn pawn)
         {
-            if (!SimpleSidearmsInstalled) { return; }
+            if (pawn is null || !SimpleSidearmsInstalled) { return; }
             try { DoSimpleSidearmsDefaultCheck(pawn); } catch { }
         }
 

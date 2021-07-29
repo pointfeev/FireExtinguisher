@@ -41,20 +41,17 @@ namespace FireExtinguisher
 
         public static bool EndCurrentJob(Pawn_JobTracker __instance, Pawn ___pawn)
         {
-            if (__instance != null && __instance.curJob != null && __instance.curJob.def != null && ___pawn != null)
+            if (__instance?.curJob?.def?.defName == "ExtinguishFire" && !(___pawn is null) && ___pawn.IsFreeColonist)
             {
-                if (__instance.curJob.def.defName == "ExtinguishFire" && ___pawn.IsFreeColonist)
-                {
-                    InventoryUtils.UnequipFireExtinguisher(___pawn);
-                    //Log.Warning("[FireExtinguisher] ExtinguishFire ended with condition: " + condition.ToString());
-                }
+                InventoryUtils.UnequipFireExtinguisher(___pawn);
+                //Log.Warning("[FireExtinguisher] ExtinguishFire ended with condition: " + condition.ToString());
             }
             return true;
         }
 
         public static void ShieldBeltAllowVerbCast(ref bool __result, Verb verb)
         {
-            if (InventoryUtils.CheckDefName(verb.EquipmentSource.def.defName))
+            if (InventoryUtils.CheckDefName(verb?.EquipmentSource?.def?.defName))
             {
                 __result = true;
             }
@@ -62,21 +59,15 @@ namespace FireExtinguisher
 
         public static void SimpleSidearmsStatCalculatorPatch(ThingWithComps weapon, ref float __result)
         {
-            if (weapon != null)
+            if (InventoryUtils.CheckDefName(weapon?.def?.defName))
             {
-                if (InventoryUtils.CheckDefName(weapon.def.defName))
-                {
-                    __result = 0;
-                }
+                __result = 0;
             }
         }
 
         public static void SimpleSidearmsDefaultWeaponPatch(Thing weapon)
         {
-            if (weapon != null)
-            {
-                CompatibilityUtils.SimpleSidearmsDefaultCheck(weapon.ParentHolder as Pawn);
-            }
+            CompatibilityUtils.SimpleSidearmsDefaultCheck(weapon?.ParentHolder as Pawn);
         }
     }
 }

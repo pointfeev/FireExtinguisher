@@ -10,6 +10,7 @@ namespace FireExtinguisher
 
         public static bool CheckDefName(string defName)
         {
+            if (defName is null || defName.Length <= 0) { return false; }
             return fireExtinguisherDefNames.Contains(defName);
         }
 
