@@ -61,12 +61,7 @@ namespace FireExtinguisher
                     pawn.equipment.AddEquipment(fireExtinguisher);
                 }
             }
-            if (fireExtinguisher != null)
-            {
-                CompatibilityUtils.SimpleSidearmsDefaultCheck(pawn);
-                return true;
-            }
-            return false;
+            return !(fireExtinguisher is null);
         }
 
         public static bool UnequipFireExtinguisher(Pawn pawn)

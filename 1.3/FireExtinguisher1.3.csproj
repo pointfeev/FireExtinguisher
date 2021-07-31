@@ -36,7 +36,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SimpleSidearms">
-      <HintPath>..\..\SimpleSidearms\v1.2\Assemblies\SimpleSidearms.dll</HintPath>
+      <HintPath>..\..\SimpleSidearms\v1.3\Assemblies\SimpleSidearms.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -60,12 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
-      <Version>1.3.3074</Version>
-	  <ExcludeAssets>runtime</ExcludeAssets>
+      <Version>1.3.3076</Version>
+      <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
       <Version>2.1.1</Version>
-	  <ExcludeAssets>runtime</ExcludeAssets>
+      <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -25,16 +25,8 @@ namespace FireExtinguisher
             if (CompatibilityUtils.SimpleSidearmsInstalled)
             {
                 harmony.Patch(
-                    original: AccessTools.Method(AccessTools.TypeByName("SimpleSidearms.utilities.StatCalculator"), "RangedDPS"),
-                    postfix: new HarmonyMethod(typeof(HarmonyPatches), "SimpleSidearmsStatCalculatorPatch")
-                );
-                harmony.Patch(
-                    original: AccessTools.Method(AccessTools.TypeByName("SimpleSidearms.utilities.StatCalculator"), "RangedDPSAverage"),
-                    postfix: new HarmonyMethod(typeof(HarmonyPatches), "SimpleSidearmsStatCalculatorPatch")
-                );
-                harmony.Patch(
-                    original: AccessTools.Method(AccessTools.TypeByName("SimpleSidearms.rimworld.CompSidearmMemory"), "InformOfAddedPrimary"),
-                    postfix: new HarmonyMethod(typeof(HarmonyPatches), "SimpleSidearmsDefaultWeaponPatch")
+                    original: AccessTools.Method(AccessTools.TypeByName("SimpleSidearms.rimworld.CompSidearmMemory"), "set_DefaultRangedWeapon"),
+                    prefix: new HarmonyMethod(typeof(HarmonyPatches), "SimpleSidearmsDefaultWeaponPatch")
                 );
             }
         }
@@ -65,9 +57,9 @@ namespace FireExtinguisher
             }
         }
 
-        public static void SimpleSidearmsDefaultWeaponPatch(Thing weapon)
+        public static bool SimpleSidearmsDefaultWeaponPatch(SimpleSidearms.rimworld.ThingDefStuffDefPair? value)
         {
-            CompatibilityUtils.SimpleSidearmsDefaultCheck(weapon?.ParentHolder as Pawn);
+            return !InventoryUtils.CheckDefName(value.HasValue ? value.Value.thing?.defName : null);
         }
     }
 }
