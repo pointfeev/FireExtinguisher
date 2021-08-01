@@ -31,6 +31,7 @@ namespace FireExtinguisher
             }
         }
 
+        // makes sure fire extinguishers are unequipped after the ExtinguishFire job ends
         public static bool EndCurrentJob(Pawn_JobTracker __instance, Pawn ___pawn)
         {
             if (__instance?.curJob?.def?.defName == "ExtinguishFire" && !(___pawn is null) && ___pawn.IsFreeColonist)
@@ -41,6 +42,7 @@ namespace FireExtinguisher
             return true;
         }
 
+        // overrides the AllowVerbCast for shield belts if the verb is from a fire extinguisher
         public static void ShieldBeltAllowVerbCast(ref bool __result, Verb verb)
         {
             if (InventoryUtils.CheckDefName(verb?.EquipmentSource?.def?.defName))
@@ -49,17 +51,11 @@ namespace FireExtinguisher
             }
         }
 
-        public static void SimpleSidearmsStatCalculatorPatch(ThingWithComps weapon, ref float __result)
+        // stops the DefaultRangedWeapon set function from calling if it's value will be a fire extinguisher
+        public static bool SimpleSidearmsDefaultWeaponPatch(object value)
         {
-            if (InventoryUtils.CheckDefName(weapon?.def?.defName))
-            {
-                __result = 0;
-            }
-        }
-
-        public static bool SimpleSidearmsDefaultWeaponPatch(SimpleSidearms.rimworld.ThingDefStuffDefPair? value)
-        {
-            return !InventoryUtils.CheckDefName(value.HasValue ? value.Value.thing?.defName : null);
+            SimpleSidearms.rimworld.ThingDefStuffDefPair? thingDefStuffDefPair = value as SimpleSidearms.rimworld.ThingDefStuffDefPair?;
+            return thingDefStuffDefPair is null || !InventoryUtils.CheckDefName(thingDefStuffDefPair.HasValue ? thingDefStuffDefPair.Value.thing?.defName : null);
         }
     }
 }
