@@ -21,14 +21,6 @@ namespace FireExtinguisher
                 original: AccessTools.Method(typeof(ShieldBelt), "AllowVerbCast"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), "ShieldBeltAllowVerbCast")
             );
-
-            if (CompatibilityUtils.SimpleSidearmsInstalled)
-            {
-                harmony.Patch(
-                    original: AccessTools.Method(AccessTools.TypeByName("SimpleSidearms.rimworld.CompSidearmMemory"), "set_DefaultRangedWeapon"),
-                    prefix: new HarmonyMethod(typeof(HarmonyPatches), "SimpleSidearmsDefaultWeaponPatch")
-                );
-            }
         }
 
         // makes sure fire extinguishers are unequipped after the ExtinguishFire job ends
@@ -49,13 +41,6 @@ namespace FireExtinguisher
             {
                 __result = true;
             }
-        }
-
-        // stops the DefaultRangedWeapon set function from calling if it's value will be a fire extinguisher
-        public static bool SimpleSidearmsDefaultWeaponPatch(object value)
-        {
-            SimpleSidearms.rimworld.ThingDefStuffDefPair? thingDefStuffDefPair = value as SimpleSidearms.rimworld.ThingDefStuffDefPair?;
-            return thingDefStuffDefPair is null || !InventoryUtils.CheckDefName(thingDefStuffDefPair.HasValue ? thingDefStuffDefPair.Value.thing?.defName : null);
         }
     }
 }

@@ -5,10 +5,6 @@ namespace FireExtinguisher
 {
     public static class CompatibilityUtils
     {
-        public static bool SimpleSidearmsInstalled = (from mod in ModLister.AllInstalledMods
-                                                      where mod.Active && mod.PackageId.ToLower() == "petetimessix.simplesidearms"
-                                                      select mod).Any<ModMetaData>();
-
         public static bool CombatExtendedInstalled = (from mod in ModLister.AllInstalledMods
                                                       where mod.Active && mod.PackageId.ToLower() == "ceteam.combatextended"
                                                       select mod).Any<ModMetaData>();
