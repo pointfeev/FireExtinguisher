@@ -38,7 +38,7 @@ namespace FireExtinguisher
 					}
 				}
 			};
-			Toil Approach = CastUtils.GotoCastPosition(TargetIndex.A, 0.95f);
+			Toil Approach = CastUtils.GotoCastPosition(TargetIndex.A);
 			Approach.JumpIfDespawnedOrNull(TargetIndex.A, CheckDestroyed);
 			yield return Approach;
 			Toil CastVerb = Toils_Combat.CastVerb(TargetIndex.A);

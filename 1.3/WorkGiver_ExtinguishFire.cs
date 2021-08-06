@@ -49,7 +49,7 @@ namespace FireExtinguisher
             {
 				return false;
             }
-            if (!CastUtils.CanGotoCastPosition(pawn, fire, out _, 0.95f, true) || !InventoryUtils.EquipFireExtinguisher(pawn, true))
+            if (!CastUtils.CanGotoCastPosition(pawn, fire, out _, true) || !InventoryUtils.EquipFireExtinguisher(pawn, true))
             {
 				return false;
             }

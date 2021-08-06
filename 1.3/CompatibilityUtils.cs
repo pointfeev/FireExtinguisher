@@ -11,12 +11,16 @@ namespace FireExtinguisher
 
         public static bool CombatExtendedAmmoCheck(ThingWithComps thingWithComps)
         {
-            if (CombatExtendedInstalled)
-            {
-                CombatExtended.CompAmmoUser comp = thingWithComps.TryGetComp<CombatExtended.CompAmmoUser>();
-                if (!(comp is null))
-                    return !comp.UseAmmo || comp.CurMagCount > 0 || comp.HasAmmo;
-            }
+            if (CombatExtendedInstalled) { return DoCombatExtendedAmmoCheck(thingWithComps); }
+            return true;
+        }
+
+        // to prevent BreadthFirstTraverse error
+        private static bool DoCombatExtendedAmmoCheck(ThingWithComps thingWithComps)
+        {
+            CombatExtended.CompAmmoUser comp = thingWithComps.TryGetComp<CombatExtended.CompAmmoUser>();
+            if (!(comp is null))
+                return !comp.UseAmmo || comp.CurMagCount > 0 || comp.HasAmmo;
             return true;
         }
     }

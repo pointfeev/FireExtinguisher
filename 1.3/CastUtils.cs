@@ -6,11 +6,16 @@ namespace FireExtinguisher
 {
     public static class CastUtils
     {
-        public static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, float maxRangeFactor, bool verbFromInventory)
+        private static Thing lastFire = null;
+
+        private static float defaultMaxRangeFactor = 0.95f;
+        private static float maxRangeFactor = defaultMaxRangeFactor;
+
+        public static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
         {
             intVec = new IntVec3();
             Verb verb = null;
-            if (InventoryUtils.GetEquippedFireExtinguisher(actor) == null && verbFromInventory)
+            if (InventoryUtils.GetEquippedFireExtinguisher(actor) == null && fromWorkGiver)
             {
                 ThingWithComps fireExtinguisher = InventoryUtils.GetFireExtinguisherFromInventory(actor);
                 if (fireExtinguisher != null)
@@ -39,17 +44,27 @@ namespace FireExtinguisher
             {
                 return false;
             }
+            if (fromWorkGiver)
+            {
+                maxRangeFactor = defaultMaxRangeFactor;
+            }
+            else if (lastFire == thing)
+            {
+                maxRangeFactor -= 0.15f;
+            }
+            lastFire = thing;
             return CastPositionFinder.TryFindCastPosition(new CastPositionRequest
             {
                 caster = actor,
                 target = thing,
                 verb = verb,
                 maxRangeFromTarget = Math.Max(verb.verbProps.range * maxRangeFactor, 1.42f),
+                preferredCastPosition = actor.Position,
                 wantCoverFromTarget = false
             }, out intVec);
         }
 
-        public static Toil GotoCastPosition(TargetIndex targetInd, float maxRangeFactor = 1f)
+        public static Toil GotoCastPosition(TargetIndex targetInd)
         {
             Toil toil = new Toil();
             toil.initAction = delegate ()
@@ -68,7 +83,7 @@ namespace FireExtinguisher
                     return;
                 }
                 IntVec3 intVec;
-                bool canGoto = CanGotoCastPosition(toil.actor, thing, out intVec, maxRangeFactor, false);
+                bool canGoto = CanGotoCastPosition(toil.actor, thing, out intVec, false);
                 if (!canGoto)
                 {
                     //InventoryUtils.UnequipFireExtinguisher(toil.actor);
