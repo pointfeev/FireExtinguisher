@@ -18,7 +18,7 @@ namespace FireExtinguisher
             {
                 if (currentTypes[i] != correctTypes[i])
                 {
-                    Log.Error($"Colony Groups failed to support {modName}: Incorrect parameter {i + 1} for method '{methodInfo.ReflectedType.FullName + "." + methodInfo.Name}'!  Please report this error!" +
+                    Log.Error($"[FireExtinguisher] Failed to support {modName}: Incorrect parameter {i + 1} for method '{methodInfo.ReflectedType.FullName + "." + methodInfo.Name}'!  Please report this error!" +
                         "\n    " + currentTypes[i] + " != " + correctTypes[i]);
                     return false;
                 }
