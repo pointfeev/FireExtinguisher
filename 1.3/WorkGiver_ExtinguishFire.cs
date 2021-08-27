@@ -49,7 +49,7 @@ namespace FireExtinguisher
             {
 				return false;
             }
-            if (!CastUtils.CanGotoCastPosition(pawn, fire, out _, true) || !InventoryUtils.EquipFireExtinguisher(pawn, true))
+            if (!CastUtils.CanGotoCastPosition(pawn, fire, out _, true) || !InventoryUtils.EquipFireExtinguisher(pawn))
             {
 				return false;
             }
@@ -58,7 +58,7 @@ namespace FireExtinguisher
 
 		public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
 		{
-			//Log.Warning("[FireExtinguisher] (WorkGiver) Started a job for pawn: " + pawn.Name);
+			// Log.Warning("[FireExtinguisher] (WorkGiver) Started a job for pawn: " + pawn.Name);
 			return JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
 		}
 

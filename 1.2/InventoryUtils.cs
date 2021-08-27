@@ -1,90 +1,102 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Verse;
+using Verse.Sound;
 
 namespace FireExtinguisher
 {
     public static class InventoryUtils
     {
         public static List<string> fireExtinguisherDefNames = new List<string>(new string[] { "VWE_Gun_FireExtinguisher", "Gun_Fire_Ext" });
+        private static bool checkDefName(string defName) => !(defName is null) && fireExtinguisherDefNames.Contains(defName);
+        public static bool IsWeaponFireExtinguisher(ThingWithComps weapon) => !(weapon is null) && checkDefName(weapon.def?.defName);
 
-        public static bool CheckDefName(string defName)
+        public static ThingWithComps GetFireExtinguisherFromEquipment(Pawn pawn)
         {
-            if (defName is null || defName.Length <= 0) { return false; }
-            return fireExtinguisherDefNames.Contains(defName);
+            ThingWithComps primary = pawn.equipment.Primary;
+            return IsWeaponFireExtinguisher(primary) && ModCompatibility.CheckWeapon(primary) ? primary : null;
         }
 
-        public static ThingWithComps GetEquippedFireExtinguisher(Pawn pawn)
-        {
-            if (pawn.equipment.Primary != null && CheckDefName(pawn.equipment.Primary.def.defName) && CompatibilityUtils.HasAmmo(pawn.equipment.Primary))
-            {
-                return pawn.equipment.Primary;
-            }
-            return null;
-        }
+        public static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn) => (from thing in pawn.inventory.innerContainer
+                                                                                     where IsWeaponFireExtinguisher(thing as ThingWithComps) &&
+                                                                                         ModCompatibility.CheckWeapon(thing as ThingWithComps)
+                                                                                     orderby thing.MarketValue descending
+                                                                                     select thing).First() as ThingWithComps;
 
-        public static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn)
+        private static Dictionary<Pawn, ThingWithComps> previousWeapons = new Dictionary<Pawn, ThingWithComps>();
+        private static bool unequipWeapon(Pawn pawn, bool cachePrevious = false)
         {
-            ThingWithComps fireExtinguisher = (from thing in pawn.inventory.innerContainer
-                                               where thing is ThingWithComps && CheckDefName(thing.def.defName) && CompatibilityUtils.HasAmmo(thing as ThingWithComps)
-                                               orderby thing.MarketValue descending
-                                               select thing).FirstOrDefault<Thing>() as ThingWithComps;
-            if (fireExtinguisher != null)
+            if (!(pawn is null))
             {
-                return fireExtinguisher;
-            }
-            return null;
-        }
-
-        private static Dictionary<Pawn, ThingWithComps> previousEquipped = new Dictionary<Pawn, ThingWithComps>();
-
-        public static bool EquipFireExtinguisher(Pawn pawn, bool jobBeginning)
-        {
-            if (jobBeginning && pawn.equipment.Primary != null && !CheckDefName(pawn.equipment.Primary.def.defName))
-            {
-                previousEquipped.SetOrAdd(pawn, pawn.equipment.Primary);
-            }
-            ThingWithComps fireExtinguisher = GetEquippedFireExtinguisher(pawn);
-            if (fireExtinguisher == null)
-            {
-                fireExtinguisher = GetFireExtinguisherFromInventory(pawn);
-                if (fireExtinguisher != null)
+                ThingWithComps primary = pawn.equipment.Primary;
+                if (!(primary is null))
                 {
-                    if (pawn.equipment.Primary != null)
+                    bool success = pawn.inventory.innerContainer.TryAddOrTransfer(primary);
+                    if (success)
                     {
-                        ThingWithComps primary = pawn.equipment.Primary;
-                        pawn.equipment.Remove(primary);
-                        pawn.inventory.innerContainer.TryAdd(primary, true);
+                        if (cachePrevious)
+                        {
+                            previousWeapons.SetOrAdd(pawn, primary);
+                        }
                     }
-                    pawn.inventory.innerContainer.Remove(fireExtinguisher);
-                    pawn.equipment.MakeRoomFor(fireExtinguisher);
-                    pawn.equipment.AddEquipment(fireExtinguisher);
+                    else
+                    {
+                        Log.Error($"[FireExtinguisher] Failed to unequip weapon for {pawn.LabelShort}: {primary.Label}");
+                        return false;
+                    }
                 }
+                return true;
             }
-            return !(fireExtinguisher is null);
+            return false;
+        }
+        private static bool equipWeapon(Pawn pawn, ThingWithComps weapon, bool cachePrevious = false)
+        {
+            if (!(pawn is null) && !(weapon is null) && unequipWeapon(pawn, cachePrevious))
+            {
+                if (weapon.stackCount > 1)
+                {
+                    weapon = weapon.SplitOff(1) as ThingWithComps;
+                }
+                if (!(weapon.holdingOwner is null))
+                {
+                    weapon.holdingOwner.Remove(weapon);
+                }
+                pawn.equipment.AddEquipment(weapon);
+                weapon.def.soundInteract?.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+                return true;
+            }
+            return false;
+        }
+
+        public static bool EquipFireExtinguisher(Pawn pawn)
+        {
+            ThingWithComps fireExtinguisher = GetFireExtinguisherFromEquipment(pawn);
+            if (fireExtinguisher is null)
+            {
+                return equipWeapon(pawn, GetFireExtinguisherFromInventory(pawn), true);
+            }
+            return true;
         }
 
         public static bool UnequipFireExtinguisher(Pawn pawn)
         {
-            ThingWithComps fireExtinguisher = GetEquippedFireExtinguisher(pawn);
-            if (fireExtinguisher == null)
+            ThingWithComps fireExtinguisher = GetFireExtinguisherFromEquipment(pawn);
+            if (!(fireExtinguisher is null))
             {
-                return true;
-            }
-            else
-            {
-                ThingWithComps previousEq = previousEquipped.TryGetValue(pawn);
-                if (previousEq != null)
+                ThingWithComps previousWeapon = previousWeapons.TryGetValue(pawn);
+                if (!(previousWeapon is null))
                 {
-                    pawn.equipment.Remove(fireExtinguisher);
-                    pawn.inventory.innerContainer.TryAdd(fireExtinguisher, true);
-
-                    pawn.inventory.innerContainer.Remove(previousEq);
-                    pawn.equipment.MakeRoomFor(previousEq);
-                    pawn.equipment.AddEquipment(previousEq);
+                    if (previousWeapon == pawn.equipment.Primary)
+                    {
+                        previousWeapons.Remove(pawn);
+                    }
+                    else
+                    {
+                        return unequipWeapon(pawn) && equipWeapon(pawn, previousWeapon) & previousWeapons.Remove(pawn);
+                    }
                 }
-                return true;
             }
+            return true;
         }
     }
 }

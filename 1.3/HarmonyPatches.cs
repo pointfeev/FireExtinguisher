@@ -23,21 +23,18 @@ namespace FireExtinguisher
             );
         }
 
-        // makes sure fire extinguishers are unequipped after the ExtinguishFire job ends
         public static bool EndCurrentJob(Pawn_JobTracker __instance, Pawn ___pawn)
         {
-            if (__instance?.curJob?.def?.defName == "ExtinguishFire" && !(___pawn is null) && ___pawn.IsFreeColonist)
+            if (__instance?.curJob?.def?.defName == "ExtinguishFire" && !(___pawn is null))
             {
                 InventoryUtils.UnequipFireExtinguisher(___pawn);
-                //Log.Warning("[FireExtinguisher] ExtinguishFire ended with condition: " + condition.ToString());
             }
             return true;
         }
 
-        // overrides the AllowVerbCast for shield belts if the verb is from a fire extinguisher
         public static void ShieldBeltAllowVerbCast(ref bool __result, Verb verb)
         {
-            if (InventoryUtils.CheckDefName(verb?.EquipmentSource?.def?.defName))
+            if (InventoryUtils.IsWeaponFireExtinguisher(verb?.EquipmentSource))
             {
                 __result = true;
             }

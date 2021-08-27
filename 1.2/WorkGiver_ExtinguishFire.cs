@@ -4,8 +4,8 @@ using Verse.AI;
 
 namespace FireExtinguisher
 {
-	internal class WorkGiver_ExtinguishFire : WorkGiver_Scanner
-	{
+    internal class WorkGiver_ExtinguishFire : WorkGiver_Scanner
+    {
 		public override ThingRequest PotentialWorkThingRequest
 		{
 			get
@@ -46,19 +46,19 @@ namespace FireExtinguisher
 				return false;
 			}
 			if ((pawn.Position - fire.Position).LengthHorizontalSquared > 225 && !pawn.CanReserve(fire, 1, -1, null, forced) || FireIsBeingHandled(fire, pawn))
-			{
+            {
 				return false;
-			}
-			if (!CastUtils.CanGotoCastPosition(pawn, fire, out _, true) || !InventoryUtils.EquipFireExtinguisher(pawn, true))
-			{
+            }
+            if (!CastUtils.CanGotoCastPosition(pawn, fire, out _, true) || !InventoryUtils.EquipFireExtinguisher(pawn))
+            {
 				return false;
-			}
+            }
 			return true;
 		}
 
 		public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
 		{
-			//Log.Warning("[FireExtinguisher] (WorkGiver) Started a job for pawn: " + pawn.Name);
+			// Log.Warning("[FireExtinguisher] (WorkGiver) Started a job for pawn: " + pawn.Name);
 			return JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
 		}
 

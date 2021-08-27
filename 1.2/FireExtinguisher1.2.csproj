@@ -42,11 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CastUtils.cs" />
-    <Compile Include="CompatibilityUtils.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="InventoryUtils.cs" />
     <Compile Include="JobDefOf_ExtinguishFire.cs" />
     <Compile Include="JobDriver_ExtinguishFire.cs" />
+    <Compile Include="ModCompatibility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkGiver_ExtinguishFire.cs" />
   </ItemGroup>
@@ -58,6 +58,9 @@
     <PackageReference Include="Lib.Harmony">
       <Version>2.1.1</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="RimWorld.CompatUtils">
+      <Version>1.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

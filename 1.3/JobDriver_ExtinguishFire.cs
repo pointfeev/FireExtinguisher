@@ -10,15 +10,15 @@ namespace FireExtinguisher
 		{
 			get
 			{
-				return (Fire)this.job.targetA.Thing;
+				return (Fire)job.targetA.Thing;
 			}
 		}
 
 		public override bool TryMakePreToilReservations(bool errorOnFailed)
 		{
-			if (this.Map.reservationManager.CanReserve(this.pawn, this.TargetFire))
+			if (Map.reservationManager.CanReserve(pawn, TargetFire))
 			{
-				return this.pawn.Reserve(this.TargetFire, this.job);
+				return pawn.Reserve(TargetFire, job);
 			}
 			return false;
 		}
@@ -30,11 +30,10 @@ namespace FireExtinguisher
 			{
 				initAction = delegate()
 				{
-					if (this.TargetFire == null || this.TargetFire.Destroyed)
+					if (TargetFire == null || TargetFire.Destroyed)
 					{
-						this.pawn.records.Increment(RecordDefOf.FiresExtinguished);
-						//InventoryUtils.UnequipFireExtinguisher(pawn);
-						this.pawn.jobs.EndCurrentJob(JobCondition.Succeeded, true, true);
+						pawn.records.Increment(RecordDefOf.FiresExtinguished);
+						pawn.jobs.EndCurrentJob(JobCondition.Succeeded, true, true);
 					}
 				}
 			};

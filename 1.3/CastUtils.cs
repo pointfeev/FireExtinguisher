@@ -15,7 +15,7 @@ namespace FireExtinguisher
         {
             intVec = new IntVec3();
             Verb verb = null;
-            if (InventoryUtils.GetEquippedFireExtinguisher(actor) == null && fromWorkGiver)
+            if (InventoryUtils.GetFireExtinguisherFromEquipment(actor) == null && fromWorkGiver)
             {
                 ThingWithComps fireExtinguisher = InventoryUtils.GetFireExtinguisherFromInventory(actor);
                 if (fireExtinguisher != null)
@@ -86,7 +86,6 @@ namespace FireExtinguisher
                 bool canGoto = CanGotoCastPosition(toil.actor, thing, out intVec, false);
                 if (!canGoto)
                 {
-                    //InventoryUtils.UnequipFireExtinguisher(toil.actor);
                     toil.actor.jobs.EndCurrentJob(JobCondition.Incompletable, true, true);
                     return;
                 }
