@@ -21,7 +21,7 @@ namespace FireExtinguisher
                                                                                      where IsWeaponFireExtinguisher(thing as ThingWithComps) &&
                                                                                          ModCompatibility.CheckWeapon(thing as ThingWithComps)
                                                                                      orderby thing.MarketValue descending
-                                                                                     select thing).First() as ThingWithComps;
+                                                                                     select thing).FirstOrFallback() as ThingWithComps;
 
         private static Dictionary<Pawn, ThingWithComps> previousWeapons = new Dictionary<Pawn, ThingWithComps>();
         private static bool unequipWeapon(Pawn pawn, bool cachePrevious = false)
