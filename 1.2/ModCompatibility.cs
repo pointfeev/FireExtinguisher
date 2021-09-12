@@ -10,9 +10,12 @@ namespace FireExtinguisher
     {
         public static MethodInfo combatExtendedHasAmmoMethod;
 
-        static ModCompatibility() => combatExtendedHasAmmoMethod = Compatibility.GetConsistentMethod("ceteam.combatextended", "CombatExtended.CE_Utility", "HasAmmo", new Type[] {
+        static ModCompatibility()
+        {
+            combatExtendedHasAmmoMethod = Compatibility.GetConsistentMethod("ceteam.combatextended", "CombatExtended.CE_Utility", "HasAmmo", new Type[] {
                 typeof(ThingWithComps)
             }, logError: true);
+        }
 
         private static bool HasAmmo(ThingWithComps thingWithComps) => combatExtendedHasAmmoMethod is null || (bool)combatExtendedHasAmmoMethod.Invoke(null, new object[] { thingWithComps });
 
