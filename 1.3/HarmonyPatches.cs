@@ -10,7 +10,7 @@ namespace FireExtinguisher
     {
         static HarmonyPatches()
         {
-            var harmony = new Harmony("pointfeev.fireextinguisher");
+            Harmony harmony = new Harmony("pointfeev.fireextinguisher");
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(Pawn_JobTracker), "EndCurrentJob"),

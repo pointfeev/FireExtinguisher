@@ -6,13 +6,7 @@ namespace FireExtinguisher
 {
     public class JobDriver_ExtinguishFire : JobDriver
     {
-        protected Fire TargetFire
-        {
-            get
-            {
-                return (Fire)job.targetA.Thing;
-            }
-        }
+        protected Fire TargetFire => (Fire)job.targetA.Thing;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {

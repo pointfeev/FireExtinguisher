@@ -6,13 +6,7 @@ namespace FireExtinguisher
 {
     internal class WorkGiver_ExtinguishFire : WorkGiver_Scanner
     {
-        public override ThingRequest PotentialWorkThingRequest
-        {
-            get
-            {
-                return ThingRequest.ForDef(ThingDefOf.Fire);
-            }
-        }
+        public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForDef(ThingDefOf.Fire);
 
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
@@ -56,11 +50,9 @@ namespace FireExtinguisher
             return true;
         }
 
-        public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
-        {
+        public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false) =>
             // Log.Warning("[FireExtinguisher] (WorkGiver) Started a job for pawn: " + pawn.Name);
-            return JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
-        }
+            JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
 
         public static bool FireIsBeingHandled(Fire f, Pawn potentialHandler)
         {

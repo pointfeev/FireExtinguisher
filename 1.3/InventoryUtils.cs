@@ -23,7 +23,7 @@ namespace FireExtinguisher
                                                                                      orderby thing.MarketValue descending
                                                                                      select thing).FirstOrFallback() as ThingWithComps;
 
-        private static Dictionary<Pawn, ThingWithComps> previousWeapons = new Dictionary<Pawn, ThingWithComps>();
+        private static readonly Dictionary<Pawn, ThingWithComps> previousWeapons = new Dictionary<Pawn, ThingWithComps>();
         private static bool unequipWeapon(Pawn pawn, bool cachePrevious = false)
         {
             if (!(pawn is null))

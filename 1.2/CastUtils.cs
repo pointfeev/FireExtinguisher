@@ -8,7 +8,7 @@ namespace FireExtinguisher
     {
         private static Thing lastFire = null;
 
-        private static float defaultMaxRangeFactor = 0.95f;
+        private static readonly float defaultMaxRangeFactor = 0.95f;
         private static float maxRangeFactor = defaultMaxRangeFactor;
 
         public static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
@@ -81,8 +81,7 @@ namespace FireExtinguisher
                     toil.actor.jobs.curDriver.ReadyForNextToil();
                     return;
                 }
-                IntVec3 intVec;
-                bool canGoto = CanGotoCastPosition(toil.actor, thing, out intVec, false);
+                bool canGoto = CanGotoCastPosition(toil.actor, thing, out IntVec3 intVec, false);
                 if (!canGoto)
                 {
                     toil.actor.jobs.EndCurrentJob(JobCondition.Incompletable, true, true);
