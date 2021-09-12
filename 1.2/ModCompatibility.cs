@@ -1,7 +1,7 @@
-﻿using System;
+﻿using CompatUtils;
+using System;
 using System.Reflection;
 using Verse;
-using CompatUtils;
 
 namespace FireExtinguisher
 {
