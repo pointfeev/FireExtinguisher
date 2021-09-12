@@ -8,8 +8,6 @@ namespace FireExtinguisher
     [StaticConstructorOnStartup]
     public static class ModCompatibility
     {
-        public static bool combatExtendedActive = Compatibility.IsModActive("ceteam.combatextended");
-
         public static MethodInfo combatExtendedHasAmmoMethod;
 
         static ModCompatibility()
