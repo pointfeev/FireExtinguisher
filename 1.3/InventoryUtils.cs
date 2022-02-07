@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Verse;
 using Verse.Sound;
 
@@ -8,15 +9,9 @@ namespace FireExtinguisher
     public static class InventoryUtils
     {
         public static List<string> fireExtinguisherDefNames = new List<string>(new string[] { "VWE_Gun_FireExtinguisher", "Gun_Fire_Ext" });
-        private static bool checkDefName(string defName)
-        {
-            return !(defName is null) && fireExtinguisherDefNames.Contains(defName);
-        }
+        private static bool checkDefName(string defName) => !(defName is null) && fireExtinguisherDefNames.Contains(defName);
 
-        public static bool IsWeaponFireExtinguisher(ThingWithComps weapon)
-        {
-            return !(weapon is null) && checkDefName(weapon.def?.defName);
-        }
+        public static bool IsWeaponFireExtinguisher(ThingWithComps weapon) => !(weapon is null) && checkDefName(weapon.def?.defName);
 
         public static ThingWithComps GetFireExtinguisherFromEquipment(Pawn pawn)
         {
@@ -24,14 +19,11 @@ namespace FireExtinguisher
             return IsWeaponFireExtinguisher(primary) && ModCompatibility.CheckWeapon(primary) ? primary : null;
         }
 
-        public static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn)
-        {
-            return (from thing in pawn.inventory.innerContainer
-                    where IsWeaponFireExtinguisher(thing as ThingWithComps) &&
-                        ModCompatibility.CheckWeapon(thing as ThingWithComps)
-                    orderby thing.MarketValue descending
-                    select thing).FirstOrFallback() as ThingWithComps;
-        }
+        public static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn) => (from thing in pawn.inventory.innerContainer
+                                                                                     where IsWeaponFireExtinguisher(thing as ThingWithComps) &&
+                                                                                         ModCompatibility.CheckWeapon(thing as ThingWithComps)
+                                                                                     orderby thing.MarketValue descending
+                                                                                     select thing).FirstOrFallback() as ThingWithComps;
 
         private static readonly Dictionary<Pawn, ThingWithComps> previousWeapons = new Dictionary<Pawn, ThingWithComps>();
         private static bool unequipWeapon(Pawn pawn, bool cachePrevious = false)

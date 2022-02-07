@@ -1,6 +1,8 @@
-﻿using CompatUtils;
-using System;
+﻿using System;
 using System.Reflection;
+
+using CompatUtils;
+
 using Verse;
 
 namespace FireExtinguisher
@@ -10,21 +12,12 @@ namespace FireExtinguisher
     {
         public static MethodInfo combatExtendedHasAmmoMethod;
 
-        static ModCompatibility()
-        {
-            combatExtendedHasAmmoMethod = Compatibility.GetConsistentMethod("ceteam.combatextended", "CombatExtended.CE_Utility", "HasAmmo", new Type[] {
+        static ModCompatibility() => combatExtendedHasAmmoMethod = Compatibility.GetConsistentMethod("ceteam.combatextended", "CombatExtended.CE_Utility", "HasAmmo", new Type[] {
                 typeof(ThingWithComps)
             }, logError: true);
-        }
 
-        private static bool HasAmmo(ThingWithComps thingWithComps)
-        {
-            return combatExtendedHasAmmoMethod is null || (bool)combatExtendedHasAmmoMethod.Invoke(null, new object[] { thingWithComps });
-        }
+        private static bool HasAmmo(ThingWithComps thingWithComps) => combatExtendedHasAmmoMethod is null || (bool)combatExtendedHasAmmoMethod.Invoke(null, new object[] { thingWithComps });
 
-        public static bool CheckWeapon(ThingWithComps thingWithComps)
-        {
-            return !(thingWithComps is null) && HasAmmo(thingWithComps);
-        }
+        public static bool CheckWeapon(ThingWithComps thingWithComps) => !(thingWithComps is null) && HasAmmo(thingWithComps);
     }
 }
