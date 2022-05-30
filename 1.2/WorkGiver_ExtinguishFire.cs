@@ -11,58 +11,30 @@ namespace FireExtinguisher
 
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-            Fire fire = t as Fire;
-            if (fire == null)
-            {
+            if (!(t is Fire fire))
                 return false;
-            }
-            Pawn pawn2 = fire.parent as Pawn;
-            if (pawn2 != null)
+            if (fire.parent is Pawn attachedPawn)
             {
-                if (pawn2 == pawn)
-                {
+                if (attachedPawn == pawn)
                     return false;
-                }
-                if ((pawn2.Faction == pawn.Faction || pawn2.HostFaction == pawn.Faction || pawn2.HostFaction == pawn.HostFaction) /*&& !pawn.Map.areaManager.Home[fire.Position]*/ && IntVec3Utility.ManhattanDistanceFlat(pawn.Position, pawn2.Position) > 15)
-                {
+                if ((attachedPawn.Faction == pawn.Faction || attachedPawn.HostFaction == pawn.Faction || attachedPawn.HostFaction == pawn.HostFaction)
+                    /*&& !pawn.Map.areaManager.Home[fire.Position]*/ && IntVec3Utility.ManhattanDistanceFlat(pawn.Position, attachedPawn.Position) > 15)
                     return false;
-                }
             }
-            else
+            else if (!pawn.Map.areaManager.Home[fire.Position])
             {
-                if (!pawn.Map.areaManager.Home[fire.Position])
-                {
-                    JobFailReason.Is(WorkGiver_FixBrokenDownBuilding.NotInHomeAreaTrans, null);
-                    return false;
-                }
-            }
-            if (pawn.WorkTagIsDisabled(WorkTags.Firefighting) || pawn.WorkTagIsDisabled(WorkTags.Violent))
-            {
+                JobFailReason.Is(WorkGiver_FixBrokenDownBuilding.NotInHomeAreaTrans, null);
                 return false;
             }
-            if ((pawn.Position - fire.Position).LengthHorizontalSquared > 225 && !pawn.CanReserve(fire, 1, -1, null, forced) || FireIsBeingHandled(fire, pawn))
-            {
-                return false;
-            }
-            if (!CastUtils.CanGotoCastPosition(pawn, fire, out _, true) || !InventoryUtils.EquipFireExtinguisher(pawn))
-            {
-                return false;
-            }
-            return true;
+            return InventoryUtils.CanEquipFireExtinguisher(pawn)
+                && ((pawn.Position - fire.Position).LengthHorizontalSquared <= 225 || pawn.CanReserve(fire, 1, -1, null, forced))
+                && !FireIsBeingHandled(fire, pawn)
+                && CastUtils.CanGotoCastPosition(pawn, fire, out _, true)
+                && InventoryUtils.EquipFireExtinguisher(pawn);
         }
 
-        public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false) =>
-            // Log.Warning("[FireExtinguisher] (WorkGiver) Started a job for pawn: " + pawn.Name);
-            JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
+        public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false) => JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
 
-        public static bool FireIsBeingHandled(Fire f, Pawn potentialHandler)
-        {
-            if (!f.Spawned)
-            {
-                return false;
-            }
-            Pawn pawn = f.Map.reservationManager.FirstRespectedReserver(f, potentialHandler);
-            return pawn != null;
-        }
+        public static bool FireIsBeingHandled(Fire f, Pawn potentialHandler) => f.Spawned && f.Map.reservationManager.FirstRespectedReserver(f, potentialHandler) != null;
     }
 }

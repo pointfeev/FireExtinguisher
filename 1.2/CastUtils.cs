@@ -33,26 +33,16 @@ namespace FireExtinguisher
             {
                 Job curJob = actor.jobs.curJob;
                 if (curJob != null)
-                {
                     verb = curJob.verbToUse;
-                }
                 if (verb == null)
-                {
                     verb = actor.TryGetAttackVerb(thing);
-                }
             }
             if (verb == null)
-            {
                 return false;
-            }
             if (fromWorkGiver)
-            {
                 maxRangeFactor = defaultMaxRangeFactor;
-            }
             else if (lastFire == thing)
-            {
                 maxRangeFactor -= 0.15f;
-            }
             lastFire = thing;
             return CastPositionFinder.TryFindCastPosition(new CastPositionRequest
             {

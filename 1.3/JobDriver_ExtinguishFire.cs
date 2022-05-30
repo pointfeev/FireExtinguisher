@@ -10,14 +10,7 @@ namespace FireExtinguisher
     {
         protected Fire TargetFire => (Fire)job.targetA.Thing;
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
-        {
-            if (Map.reservationManager.CanReserve(pawn, TargetFire))
-            {
-                return pawn.Reserve(TargetFire, job);
-            }
-            return false;
-        }
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => Map.reservationManager.CanReserve(pawn, TargetFire) && pawn.Reserve(TargetFire, job);
 
         protected override IEnumerable<Toil> MakeNewToils()
         {

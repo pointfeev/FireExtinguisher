@@ -16,7 +16,8 @@ namespace FireExtinguisher
                 typeof(ThingWithComps)
             }, logError: true);
 
-        private static bool HasAmmo(ThingWithComps thingWithComps) => combatExtendedHasAmmoMethod is null || (bool)combatExtendedHasAmmoMethod.Invoke(null, new object[] { thingWithComps });
+        private static bool HasAmmo(ThingWithComps thingWithComps) => combatExtendedHasAmmoMethod is null
+            || (bool)combatExtendedHasAmmoMethod.Invoke(null, new object[] { thingWithComps });
 
         public static bool CheckWeapon(ThingWithComps thingWithComps) => !(thingWithComps is null) && HasAmmo(thingWithComps);
     }
