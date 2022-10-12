@@ -13,11 +13,11 @@ namespace FireExtinguisher
         static HarmonyPatches()
         {
             Harmony harmony = new Harmony("pointfeev.fireextinguisher");
-            harmony.Patch(
+            _ = harmony.Patch(
                 original: AccessTools.Method(typeof(Pawn_JobTracker), "EndCurrentJob"),
                 prefix: new HarmonyMethod(typeof(HarmonyPatches), "EndCurrentJob")
             );
-            harmony.Patch(
+            _ = harmony.Patch(
                 original: AccessTools.Method(typeof(ShieldBelt), "AllowVerbCast"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), "ShieldBeltAllowVerbCast")
             );
@@ -26,7 +26,7 @@ namespace FireExtinguisher
         public static bool EndCurrentJob(Pawn_JobTracker __instance, Pawn ___pawn)
         {
             if (__instance?.curJob?.def?.defName == "ExtinguishFire" && !(___pawn is null))
-                InventoryUtils.UnequipFireExtinguisher(___pawn);
+                _ = InventoryUtils.UnequipFireExtinguisher(___pawn);
             return true;
         }
 

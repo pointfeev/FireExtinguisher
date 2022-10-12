@@ -57,7 +57,7 @@ namespace FireExtinguisher
                 if (weapon.stackCount > 1)
                     weapon = weapon.SplitOff(1) as ThingWithComps;
                 if (!(weapon.holdingOwner is null))
-                    weapon.holdingOwner.Remove(weapon);
+                    _ = weapon.holdingOwner.Remove(weapon);
                 pawn.equipment.AddEquipment(weapon);
                 weapon.def.soundInteract?.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
                 return true;
@@ -81,7 +81,7 @@ namespace FireExtinguisher
                 if (!(previousWeapon is null))
                 {
                     if (previousWeapon == pawn.equipment.Primary)
-                        previousWeapons.Remove(pawn);
+                        _ = previousWeapons.Remove(pawn);
                     else
                         return UnequipWeapon(pawn) && EquipWeapon(pawn, previousWeapon) & previousWeapons.Remove(pawn);
                 }

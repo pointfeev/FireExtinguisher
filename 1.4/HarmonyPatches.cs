@@ -18,7 +18,7 @@ namespace FireExtinguisher
                 prefix: new HarmonyMethod(typeof(HarmonyPatches), "EndCurrentJob")
             );
             _ = harmony.Patch(
-                original: AccessTools.Method(typeof(ShieldBelt), "AllowVerbCast"),
+                original: AccessTools.Method(typeof(CompShield), "AllowVerbCast"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), "ShieldBeltAllowVerbCast")
             );
         }
@@ -30,7 +30,7 @@ namespace FireExtinguisher
             return true;
         }
 
-        public static void ShieldBeltAllowVerbCast(ref bool __result, Verb verb)
+        public static void ShieldAllowVerbCast(ref bool __result, Verb verb)
         {
             if (InventoryUtils.IsWeaponFireExtinguisher(verb?.EquipmentSource))
                 __result = true;

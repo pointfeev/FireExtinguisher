@@ -1,7 +1,7 @@
-﻿using System;
-using System.Reflection;
+﻿using CompatUtils;
 
-using CompatUtils;
+using System;
+using System.Reflection;
 
 using Verse;
 

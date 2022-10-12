@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
 
-using RimWorld;
+using System.Collections.Generic;
 
 using Verse.AI;
 
@@ -27,10 +27,10 @@ namespace FireExtinguisher
                 }
             };
             Toil Approach = CastUtils.GotoCastPosition(TargetIndex.A);
-            Approach.JumpIfDespawnedOrNull(TargetIndex.A, CheckDestroyed);
+            _ = Approach.JumpIfDespawnedOrNull(TargetIndex.A, CheckDestroyed);
             yield return Approach;
             Toil CastVerb = Toils_Combat.CastVerb(TargetIndex.A);
-            CastVerb.JumpIfDespawnedOrNull(TargetIndex.A, CheckDestroyed);
+            _ = CastVerb.JumpIfDespawnedOrNull(TargetIndex.A, CheckDestroyed);
             yield return CastVerb;
             yield return CheckDestroyed;
             yield return Toils_Jump.Jump(Approach);

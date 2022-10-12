@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireExtinguisher1.2", "1.2\FireExtinguisher1.2.csproj", "{7C868441-C5BE-4F34-8B88-B249CF6F7A15}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireExtinguisher1.3", "1.3\FireExtinguisher1.3.csproj", "{A7DA1202-8C3A-4891-BF9C-9128E0B2510C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireExtinguisher1.4", "1.4\FireExtinguisher1.4.csproj", "{01AF7C61-C80B-423D-A8E6-D8129D4F7733}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A7DA1202-8C3A-4891-BF9C-9128E0B2510C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7DA1202-8C3A-4891-BF9C-9128E0B2510C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7DA1202-8C3A-4891-BF9C-9128E0B2510C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01AF7C61-C80B-423D-A8E6-D8129D4F7733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01AF7C61-C80B-423D-A8E6-D8129D4F7733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01AF7C61-C80B-423D-A8E6-D8129D4F7733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01AF7C61-C80B-423D-A8E6-D8129D4F7733}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
