@@ -14,12 +14,12 @@ namespace FireExtinguisher
         {
             Harmony harmony = new Harmony("pointfeev.fireextinguisher");
             _ = harmony.Patch(
-                original: AccessTools.Method(typeof(Pawn_JobTracker), "EndCurrentJob"),
-                prefix: new HarmonyMethod(typeof(HarmonyPatches), "EndCurrentJob")
+                original: AccessTools.Method(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.EndCurrentJob)),
+                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(EndCurrentJob))
             );
             _ = harmony.Patch(
-                original: AccessTools.Method(typeof(CompShield), "AllowVerbCast"),
-                postfix: new HarmonyMethod(typeof(HarmonyPatches), "ShieldBeltAllowVerbCast")
+                original: AccessTools.Method(typeof(CompShield), nameof(CompShield.CompAllowVerbCast)),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(CompAllowVerbCast))
             );
         }
 
@@ -30,7 +30,7 @@ namespace FireExtinguisher
             return true;
         }
 
-        public static void ShieldAllowVerbCast(ref bool __result, Verb verb)
+        public static void CompAllowVerbCast(ref bool __result, Verb verb)
         {
             if (InventoryUtils.IsWeaponFireExtinguisher(verb?.EquipmentSource))
                 __result = true;
