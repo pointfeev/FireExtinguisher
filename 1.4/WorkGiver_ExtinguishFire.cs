@@ -5,7 +5,7 @@ using Verse.AI;
 
 namespace FireExtinguisher
 {
-    internal class WorkGiver_ExtinguishFire : WorkGiver_Scanner
+    public class WorkGiver_ExtinguishFire : WorkGiver_Scanner
     {
         public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForDef(ThingDefOf.Fire);
 

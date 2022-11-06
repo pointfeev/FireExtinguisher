@@ -8,9 +8,9 @@ using Verse;
 namespace FireExtinguisher
 {
     [StaticConstructorOnStartup]
-    public static class ModCompatibility
+    internal static class ModCompatibility
     {
-        public static MethodInfo combatExtendedHasAmmoMethod;
+        internal static MethodInfo combatExtendedHasAmmoMethod;
 
         static ModCompatibility() => combatExtendedHasAmmoMethod = Compatibility.GetConsistentMethod("ceteam.combatextended", "CombatExtended.CE_Utility", "HasAmmo", new Type[] {
                 typeof(ThingWithComps)
@@ -19,6 +19,6 @@ namespace FireExtinguisher
         private static bool HasAmmo(ThingWithComps thingWithComps) => combatExtendedHasAmmoMethod is null
             || (bool)combatExtendedHasAmmoMethod.Invoke(null, new object[] { thingWithComps });
 
-        public static bool CheckWeapon(ThingWithComps thingWithComps) => !(thingWithComps is null) && HasAmmo(thingWithComps);
+        internal static bool CheckWeapon(ThingWithComps thingWithComps) => !(thingWithComps is null) && HasAmmo(thingWithComps);
     }
 }

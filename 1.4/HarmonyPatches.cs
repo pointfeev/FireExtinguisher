@@ -8,7 +8,7 @@ using Verse.AI;
 namespace FireExtinguisher
 {
     [StaticConstructorOnStartup]
-    public static class HarmonyPatches
+    internal static class HarmonyPatches
     {
         static HarmonyPatches()
         {
@@ -23,16 +23,16 @@ namespace FireExtinguisher
             );
         }
 
-        public static bool EndCurrentJob(Pawn_JobTracker __instance, Pawn ___pawn)
+        internal static bool EndCurrentJob(Pawn_JobTracker __instance, Pawn ___pawn)
         {
-            if (__instance?.curJob?.def?.defName == "ExtinguishFire" && !(___pawn is null))
+            if (__instance?.curJob?.def == JobDefOf_ExtinguishFire.ExtinguishFire && !(___pawn is null))
                 _ = InventoryUtils.UnequipFireExtinguisher(___pawn);
             return true;
         }
 
-        public static void CompAllowVerbCast(ref bool __result, Verb verb)
+        internal static void CompAllowVerbCast(ref bool __result, Verb verb)
         {
-            if (InventoryUtils.IsWeaponFireExtinguisher(verb?.EquipmentSource))
+            if (InventoryUtils.CanWeaponExtinguish(verb?.EquipmentSource))
                 __result = true;
         }
     }

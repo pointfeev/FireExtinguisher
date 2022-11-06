@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+
+using System.Collections.Generic;
 using System.Linq;
 
 using Verse;
@@ -6,24 +8,22 @@ using Verse.Sound;
 
 namespace FireExtinguisher
 {
-    public static class InventoryUtils
+    internal static class InventoryUtils
     {
-        public static List<string> fireExtinguisherDefNames = new List<string>(new string[] { "VWE_Gun_FireExtinguisher", "Gun_Fire_Ext" });
-        private static bool CheckDefName(string defName) => !(defName is null) && fireExtinguisherDefNames.Contains(defName);
+        private static readonly List<string> ExtinguishDamageDefNames = new List<string>() { "VWE_Extinguish", "FExtExtinguish" };
+        internal static bool CanWeaponExtinguish(ThingWithComps weapon) => GetPrimaryVerb(weapon)?.GetDamageDef() is DamageDef damageDef
+            && (damageDef == DamageDefOf.Extinguish || ExtinguishDamageDefNames.Contains(damageDef.defName));
 
-        public static bool IsWeaponFireExtinguisher(ThingWithComps weapon) => !(weapon is null) && CheckDefName(weapon.def?.defName);
+        internal static Verb GetPrimaryVerb(ThingWithComps weapon) => weapon?.GetComp<CompEquippable>()?.PrimaryVerb;
 
-        public static ThingWithComps GetFireExtinguisherFromEquipment(Pawn pawn)
-        {
-            ThingWithComps primary = pawn.equipment.Primary;
-            return IsWeaponFireExtinguisher(primary) && ModCompatibility.CheckWeapon(primary) ? primary : null;
-        }
+        internal static ThingWithComps GetFireExtinguisherFromEquipment(Pawn pawn) => pawn?.equipment?.Primary is ThingWithComps primary
+            && CanWeaponExtinguish(primary) && ModCompatibility.CheckWeapon(primary) ? primary : null;
 
-        public static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn) => (from thing in pawn.inventory.innerContainer
-                                                                                     where IsWeaponFireExtinguisher(thing as ThingWithComps) &&
-                                                                                         ModCompatibility.CheckWeapon(thing as ThingWithComps)
-                                                                                     orderby thing.MarketValue descending
-                                                                                     select thing).FirstOrFallback() as ThingWithComps;
+        internal static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn) => (from thing in pawn.inventory.innerContainer
+                                                                                       where CanWeaponExtinguish(thing as ThingWithComps) &&
+                                                                                           ModCompatibility.CheckWeapon(thing as ThingWithComps)
+                                                                                       orderby thing.MarketValue descending
+                                                                                       select thing).FirstOrFallback() as ThingWithComps;
 
         private static readonly Dictionary<Pawn, ThingWithComps> previousWeapons = new Dictionary<Pawn, ThingWithComps>();
         private static bool UnequipWeapon(Pawn pawn, bool cachePrevious = false)
@@ -67,12 +67,13 @@ namespace FireExtinguisher
 
         private static bool CanEquipFireExtinguisher(Pawn pawn, ThingWithComps extinguisher) => !(pawn is null) && !(extinguisher is null) && !(extinguisher.def is null)
             && !pawn.WorkTagIsDisabled(WorkTags.Firefighting) && (!pawn.WorkTagIsDisabled(WorkTags.Violent) || !extinguisher.def.IsRangedWeapon);
-        public static bool CanEquipFireExtinguisher(Pawn pawn) => CanEquipFireExtinguisher(pawn, GetFireExtinguisherFromInventory(pawn));
+        internal static bool CanEquipFireExtinguisher(Pawn pawn) => !(GetFireExtinguisherFromEquipment(pawn) is null)
+            || CanEquipFireExtinguisher(pawn, GetFireExtinguisherFromInventory(pawn));
 
-        public static bool EquipFireExtinguisher(Pawn pawn) => !(GetFireExtinguisherFromEquipment(pawn) is null)
+        internal static bool EquipFireExtinguisher(Pawn pawn) => !(GetFireExtinguisherFromEquipment(pawn) is null)
             || EquipWeapon(pawn, GetFireExtinguisherFromInventory(pawn), true);
 
-        public static bool UnequipFireExtinguisher(Pawn pawn)
+        internal static bool UnequipFireExtinguisher(Pawn pawn)
         {
             ThingWithComps fireExtinguisher = GetFireExtinguisherFromEquipment(pawn);
             if (!(fireExtinguisher is null))

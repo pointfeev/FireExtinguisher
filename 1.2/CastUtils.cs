@@ -5,14 +5,14 @@ using Verse.AI;
 
 namespace FireExtinguisher
 {
-    public static class CastUtils
+    internal static class CastUtils
     {
         private static Thing lastFire = null;
 
         private static readonly float defaultMaxRangeFactor = 0.95f;
         private static float maxRangeFactor = defaultMaxRangeFactor;
 
-        public static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
+        internal static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
         {
             intVec = new IntVec3();
             Verb verb = null;
@@ -21,12 +21,9 @@ namespace FireExtinguisher
                 ThingWithComps fireExtinguisher = InventoryUtils.GetFireExtinguisherFromInventory(actor);
                 if (fireExtinguisher != null)
                 {
-                    CompEquippable compEquippable = fireExtinguisher.GetComp<CompEquippable>();
-                    if (compEquippable != null)
-                    {
-                        verb = compEquippable.verbTracker.PrimaryVerb;
+                    verb = InventoryUtils.GetPrimaryVerb(fireExtinguisher);
+                    if (verb != null)
                         verb.caster = actor;
-                    }
                 }
             }
             else
@@ -54,7 +51,7 @@ namespace FireExtinguisher
             }, out intVec);
         }
 
-        public static Toil GotoCastPosition(TargetIndex targetInd)
+        internal static Toil GotoCastPosition(TargetIndex targetInd)
         {
             Toil toil = new Toil();
             toil.initAction = delegate ()
