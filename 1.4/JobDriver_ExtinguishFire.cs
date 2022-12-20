@@ -1,40 +1,37 @@
-﻿using RimWorld;
-
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
+using RimWorld;
 using Verse.AI;
 
 namespace FireExtinguisher
 {
     public class JobDriver_ExtinguishFire : JobDriver
     {
-        protected Fire TargetFire => (Fire)job.targetA.Thing;
+        private Fire TargetFire => (Fire)job.targetA.Thing;
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed) => Map.reservationManager.CanReserve(pawn, TargetFire) && pawn.Reserve(TargetFire, job);
+        public override bool TryMakePreToilReservations(bool errorOnFailed)
+            => Map.reservationManager.CanReserve(pawn, TargetFire) && pawn.Reserve(TargetFire, job);
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
             yield return Toils_Combat.TrySetJobToUseAttackVerb(TargetIndex.A);
-            Toil CheckDestroyed = new Toil
+            Toil checkDestroyed = new Toil
             {
-                initAction = delegate ()
+                initAction = delegate
                 {
-                    if (TargetFire == null || TargetFire.Destroyed)
-                    {
-                        pawn.records.Increment(RecordDefOf.FiresExtinguished);
-                        pawn.jobs.EndCurrentJob(JobCondition.Succeeded, true, true);
-                    }
+                    if (TargetFire != null && !TargetFire.Destroyed)
+                        return;
+                    pawn.records.Increment(RecordDefOf.FiresExtinguished);
+                    pawn.jobs.EndCurrentJob(JobCondition.Succeeded);
                 }
             };
-            Toil Approach = CastUtils.GotoCastPosition(TargetIndex.A);
-            _ = Approach.JumpIfDespawnedOrNull(TargetIndex.A, CheckDestroyed);
-            yield return Approach;
-            Toil CastVerb = Toils_Combat.CastVerb(TargetIndex.A);
-            _ = CastVerb.JumpIfDespawnedOrNull(TargetIndex.A, CheckDestroyed);
-            yield return CastVerb;
-            yield return CheckDestroyed;
-            yield return Toils_Jump.Jump(Approach);
-            yield break;
+            Toil approach = CastUtils.GotoCastPosition(TargetIndex.A);
+            _ = approach.JumpIfDespawnedOrNull(TargetIndex.A, checkDestroyed);
+            yield return approach;
+            Toil castVerb = Toils_Combat.CastVerb(TargetIndex.A);
+            _ = castVerb.JumpIfDespawnedOrNull(TargetIndex.A, checkDestroyed);
+            yield return castVerb;
+            yield return checkDestroyed;
+            yield return Toils_Jump.Jump(approach);
         }
     }
 }

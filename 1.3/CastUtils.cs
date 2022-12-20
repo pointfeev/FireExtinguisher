@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Verse;
 using Verse.AI;
 
@@ -7,10 +6,10 @@ namespace FireExtinguisher
 {
     internal static class CastUtils
     {
-        private static Thing lastFire = null;
+        private static Thing lastFire;
 
-        private static readonly float defaultMaxRangeFactor = 0.95f;
-        private static float maxRangeFactor = defaultMaxRangeFactor;
+        private const float DefaultMaxRangeFactor = 0.95f;
+        private static float maxRangeFactor = DefaultMaxRangeFactor;
 
         internal static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
         {
@@ -37,25 +36,23 @@ namespace FireExtinguisher
             if (verb == null)
                 return false;
             if (fromWorkGiver)
-                maxRangeFactor = defaultMaxRangeFactor;
+                maxRangeFactor = DefaultMaxRangeFactor;
             else if (lastFire == thing)
                 maxRangeFactor -= 0.15f;
             lastFire = thing;
-            return CastPositionFinder.TryFindCastPosition(new CastPositionRequest
-            {
-                caster = actor,
-                target = thing,
-                verb = verb,
-                maxRangeFromTarget = Math.Max(verb.verbProps.range * maxRangeFactor, 1.42f),
-                preferredCastPosition = actor.Position,
-                wantCoverFromTarget = false
-            }, out intVec);
+            return CastPositionFinder.TryFindCastPosition(
+                new CastPositionRequest
+                {
+                    caster = actor, target = thing, verb = verb,
+                    maxRangeFromTarget = Math.Max(verb.verbProps.range * maxRangeFactor, 1.42f),
+                    preferredCastPosition = actor.Position, wantCoverFromTarget = false
+                }, out intVec);
         }
 
         internal static Toil GotoCastPosition(TargetIndex targetInd)
         {
             Toil toil = new Toil();
-            toil.initAction = delegate ()
+            toil.initAction = delegate
             {
                 Thing thing = toil.actor.jobs.curJob.GetTarget(targetInd).Thing;
                 if (toil.actor == thing)
@@ -73,7 +70,7 @@ namespace FireExtinguisher
                 bool canGoto = CanGotoCastPosition(toil.actor, thing, out IntVec3 intVec, false);
                 if (!canGoto)
                 {
-                    toil.actor.jobs.EndCurrentJob(JobCondition.Incompletable, true, true);
+                    toil.actor.jobs.EndCurrentJob(JobCondition.Incompletable);
                     return;
                 }
                 toil.actor.pather.StartPath(intVec, PathEndMode.OnCell);
