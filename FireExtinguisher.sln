@@ -11,20 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireExtinguisher1.4", "1.4\
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7C868441-C5BE-4F34-8B88-B249CF6F7A15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C868441-C5BE-4F34-8B88-B249CF6F7A15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C868441-C5BE-4F34-8B88-B249CF6F7A15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C868441-C5BE-4F34-8B88-B249CF6F7A15}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7DA1202-8C3A-4891-BF9C-9128E0B2510C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7DA1202-8C3A-4891-BF9C-9128E0B2510C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7DA1202-8C3A-4891-BF9C-9128E0B2510C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7DA1202-8C3A-4891-BF9C-9128E0B2510C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{01AF7C61-C80B-423D-A8E6-D8129D4F7733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01AF7C61-C80B-423D-A8E6-D8129D4F7733}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01AF7C61-C80B-423D-A8E6-D8129D4F7733}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01AF7C61-C80B-423D-A8E6-D8129D4F7733}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
