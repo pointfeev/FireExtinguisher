@@ -12,9 +12,9 @@ namespace FireExtinguisher
         {
             Harmony harmony = new Harmony("pointfeev.fireextinguisher");
             _ = harmony.Patch(AccessTools.Method(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.EndCurrentJob)),
-                              new HarmonyMethod(typeof(HarmonyPatches), nameof(EndCurrentJob)));
+                new HarmonyMethod(typeof(HarmonyPatches), nameof(EndCurrentJob)));
             _ = harmony.Patch(AccessTools.Method(typeof(ShieldBelt), nameof(ShieldBelt.AllowVerbCast)),
-                              postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(AllowVerbCast)));
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(AllowVerbCast)));
         }
 
         internal static bool EndCurrentJob(Pawn_JobTracker __instance, Pawn ___pawn)

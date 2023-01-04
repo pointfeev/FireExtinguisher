@@ -16,8 +16,7 @@ namespace FireExtinguisher
             {
                 if (attachedPawn == pawn)
                     return false;
-                if ((attachedPawn.Faction == pawn.Faction || attachedPawn.HostFaction == pawn.Faction
-                                                          || attachedPawn.HostFaction == pawn.HostFaction)
+                if ((attachedPawn.Faction == pawn.Faction || attachedPawn.HostFaction == pawn.Faction || attachedPawn.HostFaction == pawn.HostFaction)
                     /*&& !pawn.Map.areaManager.Home[fire.Position]*/
                  && IntVec3Utility.ManhattanDistanceFlat(pawn.Position, attachedPawn.Position) > 15)
                     return false;
@@ -28,17 +27,13 @@ namespace FireExtinguisher
                 return false;
             }
             return InventoryUtils.CanEquipFireExtinguisher(pawn)
-                && ((pawn.Position - fire.Position).LengthHorizontalSquared <= 225
-                 || pawn.CanReserve(fire, 1, -1, null, forced))
-                && !FireIsBeingHandled(fire, pawn)
-                && CastUtils.CanGotoCastPosition(pawn, fire, out _, true)
-                && InventoryUtils.EquipFireExtinguisher(pawn);
+                && ((pawn.Position - fire.Position).LengthHorizontalSquared <= 225 || pawn.CanReserve(fire, 1, -1, null, forced))
+                && !FireIsBeingHandled(fire, pawn) && CastUtils.CanGotoCastPosition(pawn, fire, out _, true) && InventoryUtils.EquipFireExtinguisher(pawn);
         }
 
-        public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
-            => JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
+        public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false) => JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
 
-        private static bool FireIsBeingHandled(Fire f, Pawn potentialHandler) => f.Spawned
-         && f.Map.reservationManager.FirstRespectedReserver(f, potentialHandler) != null;
+        private static bool FireIsBeingHandled(Fire f, Pawn potentialHandler)
+            => f.Spawned && f.Map.reservationManager.FirstRespectedReserver(f, potentialHandler) != null;
     }
 }

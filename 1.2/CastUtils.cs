@@ -6,9 +6,8 @@ namespace FireExtinguisher
 {
     internal static class CastUtils
     {
-        private static Thing lastFire;
-
         private const float DefaultMaxRangeFactor = 0.95f;
+        private static Thing lastFire;
         private static float maxRangeFactor = DefaultMaxRangeFactor;
 
         internal static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
@@ -43,8 +42,8 @@ namespace FireExtinguisher
             return CastPositionFinder.TryFindCastPosition(
                 new CastPositionRequest
                 {
-                    caster = actor, target = thing, verb = verb,
-                    maxRangeFromTarget = Math.Max(verb.verbProps.range * maxRangeFactor, 1.42f)
+                    caster = actor, target = thing, verb = verb, maxRangeFromTarget = Math.Max(verb.verbProps.range * maxRangeFactor, 1.42f),
+                    wantCoverFromTarget = false
                 }, out intVec);
         }
 
@@ -54,13 +53,7 @@ namespace FireExtinguisher
             toil.initAction = delegate
             {
                 Thing thing = toil.actor.jobs.curJob.GetTarget(targetInd).Thing;
-                if (toil.actor == thing)
-                {
-                    toil.actor.pather.StopDead();
-                    toil.actor.jobs.curDriver.ReadyForNextToil();
-                    return;
-                }
-                if (thing == null)
+                if (toil.actor == thing || thing == null)
                 {
                     toil.actor.pather.StopDead();
                     toil.actor.jobs.curDriver.ReadyForNextToil();

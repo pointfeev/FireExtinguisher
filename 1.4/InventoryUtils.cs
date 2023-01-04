@@ -8,8 +8,7 @@ namespace FireExtinguisher
 {
     internal static class InventoryUtils
     {
-        private static readonly List<string> ExtinguishDamageDefNames
-            = new List<string> { "VWE_Extinguish", "FExtExtinguish" };
+        private static readonly List<string> ExtinguishDamageDefNames = new List<string> { "VWE_Extinguish", "FExtExtinguish" };
 
         private static readonly Dictionary<int, ThingWithComps> PreviousWeapons = new Dictionary<int, ThingWithComps>();
 
@@ -20,15 +19,11 @@ namespace FireExtinguisher
         internal static Verb GetPrimaryVerb(ThingWithComps weapon) => weapon?.GetComp<CompEquippable>()?.PrimaryVerb;
 
         internal static ThingWithComps GetFireExtinguisherFromEquipment(Pawn pawn)
-            => pawn?.equipment?.Primary is ThingWithComps primary
-            && CanWeaponExtinguish(primary) && ModCompatibility.CheckWeapon(primary)
-                ? primary
-                : null;
+            => pawn?.equipment?.Primary is ThingWithComps primary && CanWeaponExtinguish(primary) && ModCompatibility.CheckWeapon(primary) ? primary : null;
 
         internal static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn)
             => (from thing in pawn.inventory.innerContainer
-                where CanWeaponExtinguish(thing as ThingWithComps) &&
-                      ModCompatibility.CheckWeapon(thing as ThingWithComps)
+                where CanWeaponExtinguish(thing as ThingWithComps) && ModCompatibility.CheckWeapon(thing as ThingWithComps)
                 orderby thing.MarketValue descending
                 select thing).FirstOrFallback() as ThingWithComps;
 
@@ -66,19 +61,15 @@ namespace FireExtinguisher
             return true;
         }
 
-        private static bool CanEquipFireExtinguisher(Pawn pawn, Thing extinguisher) => pawn != null
-         && extinguisher?.def != null
-         && !pawn.WorkTagIsDisabled(WorkTags.Firefighting)
-         && (!pawn.WorkTagIsDisabled(WorkTags.Violent) || !extinguisher.def.IsRangedWeapon);
+        private static bool CanEquipFireExtinguisher(Pawn pawn, Thing extinguisher)
+            => pawn != null && extinguisher?.def != null && !pawn.WorkTagIsDisabled(WorkTags.Firefighting)
+            && (!pawn.WorkTagIsDisabled(WorkTags.Violent) || !extinguisher.def.IsRangedWeapon);
 
-        internal static bool CanEquipFireExtinguisher(Pawn pawn) => !(GetFireExtinguisherFromEquipment(pawn) is null)
-                                                                 || CanEquipFireExtinguisher(
-                                                                        pawn, GetFireExtinguisherFromInventory(pawn));
+        internal static bool CanEquipFireExtinguisher(Pawn pawn)
+            => !(GetFireExtinguisherFromEquipment(pawn) is null) || CanEquipFireExtinguisher(pawn, GetFireExtinguisherFromInventory(pawn));
 
-        internal static bool EquipFireExtinguisher(Pawn pawn) => !(GetFireExtinguisherFromEquipment(pawn) is null)
-                                                              || EquipWeapon(
-                                                                     pawn, GetFireExtinguisherFromInventory(pawn),
-                                                                     true);
+        internal static bool EquipFireExtinguisher(Pawn pawn)
+            => !(GetFireExtinguisherFromEquipment(pawn) is null) || EquipWeapon(pawn, GetFireExtinguisherFromInventory(pawn), true);
 
         internal static bool UnEquipFireExtinguisher(Pawn pawn)
         {
@@ -90,8 +81,7 @@ namespace FireExtinguisher
             if (previousWeapon == pawn.equipment.Primary)
                 _ = PreviousWeapons.Remove(pawn.thingIDNumber);
             else
-                return UnEquipWeapon(pawn) && EquipWeapon(pawn, previousWeapon)
-                                           && PreviousWeapons.Remove(pawn.thingIDNumber);
+                return UnEquipWeapon(pawn) && EquipWeapon(pawn, previousWeapon) && PreviousWeapons.Remove(pawn.thingIDNumber);
             return true;
         }
     }
