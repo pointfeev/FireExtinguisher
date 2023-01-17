@@ -22,7 +22,6 @@ namespace FireExtinguisher
             if (__instance?.curJob?.def != JobDefOf_ExtinguishFire.ExtinguishFire || ___pawn is null)
                 return true;
             _ = InventoryUtils.UnEquipFireExtinguisher(___pawn);
-            _ = CastUtils.LastCheck.Remove(___pawn.thingIDNumber);
             return true;
         }
 
