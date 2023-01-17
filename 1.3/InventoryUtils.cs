@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.Sound;
@@ -22,10 +21,8 @@ namespace FireExtinguisher
             => pawn?.equipment?.Primary is ThingWithComps primary && CanWeaponExtinguish(primary) && ModCompatibility.CheckWeapon(primary) ? primary : null;
 
         internal static ThingWithComps GetFireExtinguisherFromInventory(Pawn pawn)
-            => (from thing in pawn.inventory.innerContainer
-                where CanWeaponExtinguish(thing as ThingWithComps) && ModCompatibility.CheckWeapon(thing as ThingWithComps)
-                orderby thing.MarketValue descending
-                select thing).FirstOrFallback() as ThingWithComps;
+            => pawn?.inventory?.innerContainer?.FirstOrFallback(thing
+                => thing is ThingWithComps withComps && CanWeaponExtinguish(withComps) && ModCompatibility.CheckWeapon(withComps)) as ThingWithComps;
 
         private static bool UnEquipWeapon(Pawn pawn, bool cachePrevious = false)
         {
@@ -78,7 +75,7 @@ namespace FireExtinguisher
                 return true;
             if (!PreviousWeapons.TryGetValue(pawn.thingIDNumber, out ThingWithComps previousWeapon))
                 return true;
-            if (previousWeapon == pawn.equipment.Primary)
+            if (previousWeapon == pawn.equipment?.Primary)
                 _ = PreviousWeapons.Remove(pawn.thingIDNumber);
             else
                 return UnEquipWeapon(pawn) && EquipWeapon(pawn, previousWeapon) && PreviousWeapons.Remove(pawn.thingIDNumber);
