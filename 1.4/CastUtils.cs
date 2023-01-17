@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Verse;
 using Verse.AI;
 
@@ -6,9 +7,10 @@ namespace FireExtinguisher
 {
     internal static class CastUtils
     {
-        internal const float DefaultMaxRangeFactor = 0.95f;
+        private const float DefaultMaxRangeFactor = 0.95f;
+        internal static readonly Dictionary<int, (Thing, float)> LastCheck = new Dictionary<int, (Thing, float)>();
 
-        internal static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver, float maxRangeFactor)
+        internal static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
         {
             intVec = new IntVec3();
             Verb verb = null;
@@ -32,6 +34,10 @@ namespace FireExtinguisher
             }
             if (verb == null)
                 return false;
+            float maxRangeFactor = DefaultMaxRangeFactor;
+            if (!fromWorkGiver && LastCheck.TryGetValue(actor.thingIDNumber, out (Thing thing, float maxRangeFactor) last) && last.thing == thing)
+                maxRangeFactor = last.maxRangeFactor - 0.15f;
+            LastCheck.SetOrAdd(actor.thingIDNumber, (thing, maxRangeFactor));
             return CastPositionFinder.TryFindCastPosition(
                 new CastPositionRequest
                 {
@@ -40,7 +46,7 @@ namespace FireExtinguisher
                 }, out intVec);
         }
 
-        internal static Toil GotoCastPosition(TargetIndex targetInd, float maxRangeFactor)
+        internal static Toil GotoCastPosition(TargetIndex targetInd)
         {
             Toil toil = ToilMaker.MakeToil();
             toil.initAction = delegate
@@ -55,7 +61,7 @@ namespace FireExtinguisher
                     jobTracker.curDriver.ReadyForNextToil();
                     return;
                 }
-                bool canGoto = CanGotoCastPosition(pawn, thing, out IntVec3 intVec, false, maxRangeFactor);
+                bool canGoto = CanGotoCastPosition(pawn, thing, out IntVec3 intVec, false);
                 if (!canGoto)
                 {
                     jobTracker.EndCurrentJob(JobCondition.Incompletable);

@@ -28,8 +28,7 @@ namespace FireExtinguisher
             }
             return InventoryUtils.CanEquipFireExtinguisher(pawn)
                 && ((pawn.Position - fire.Position).LengthHorizontalSquared <= 225 || pawn.CanReserve(fire, 1, -1, null, forced))
-                && !FireIsBeingHandled(fire, pawn) && CastUtils.CanGotoCastPosition(pawn, fire, out _, true, CastUtils.DefaultMaxRangeFactor)
-                && InventoryUtils.EquipFireExtinguisher(pawn);
+                && !FireIsBeingHandled(fire, pawn) && CastUtils.CanGotoCastPosition(pawn, fire, out _, true) && InventoryUtils.EquipFireExtinguisher(pawn);
         }
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false) => JobMaker.MakeJob(JobDefOf_ExtinguishFire.ExtinguishFire, t);
