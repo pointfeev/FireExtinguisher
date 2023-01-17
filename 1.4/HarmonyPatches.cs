@@ -19,8 +19,10 @@ namespace FireExtinguisher
 
         internal static bool EndCurrentJob(Pawn_JobTracker __instance, Pawn ___pawn)
         {
-            if (__instance?.curJob?.def == JobDefOf_ExtinguishFire.ExtinguishFire && !(___pawn is null))
-                _ = InventoryUtils.UnEquipFireExtinguisher(___pawn);
+            if (__instance?.curJob?.def != JobDefOf_ExtinguishFire.ExtinguishFire || ___pawn is null)
+                return true;
+            _ = InventoryUtils.UnEquipFireExtinguisher(___pawn);
+            _ = CastUtils.LastThing.Remove(___pawn.thingIDNumber);
             return true;
         }
 

@@ -8,24 +8,19 @@ namespace FireExtinguisher
     {
         private const TargetIndex FireIndex = TargetIndex.A;
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
-        {
-            Fire fire = (Fire)job.GetTarget(FireIndex);
-            return fire != null && Map.reservationManager.CanReserve(pawn, fire) && pawn.Reserve(fire, job);
-        }
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => true;
 
         private Toil CheckDestroyedToil(TargetIndex targetIndex)
         {
-            Toil toil = new Toil
+            Toil toil = new Toil();
+            toil.initAction = delegate
             {
-                initAction = delegate
-                {
-                    Fire fire = (Fire)pawn.CurJob.GetTarget(targetIndex);
-                    if (fire != null && !fire.Destroyed)
-                        return;
-                    pawn.records.Increment(RecordDefOf.FiresExtinguished);
-                    pawn.jobs.EndCurrentJob(JobCondition.Succeeded);
-                }
+                Fire fire = (Fire)pawn.CurJob.GetTarget(targetIndex);
+                if (fire != null && !fire.Destroyed)
+                    return;
+                _ = CastUtils.LastThing.Remove(pawn.thingIDNumber);
+                pawn.records.Increment(RecordDefOf.FiresExtinguished);
+                pawn.jobs.EndCurrentJob(JobCondition.Succeeded);
             };
             return toil;
         }
