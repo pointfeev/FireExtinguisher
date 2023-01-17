@@ -8,7 +8,7 @@ namespace FireExtinguisher
     internal static class CastUtils
     {
         private const float DefaultMaxRangeFactor = 0.95f;
-        internal static readonly Dictionary<int, (Thing, float)> LastCheck = new Dictionary<int, (Thing, float)>();
+        internal static readonly Dictionary<int, float> LastCheck = new Dictionary<int, float>();
 
         internal static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
         {
@@ -34,10 +34,10 @@ namespace FireExtinguisher
             }
             if (verb == null)
                 return false;
-            float maxRangeFactor = DefaultMaxRangeFactor;
-            if (!fromWorkGiver && LastCheck.TryGetValue(actor.thingIDNumber, out (Thing thing, float maxRangeFactor) last) && last.thing == thing)
-                maxRangeFactor = last.maxRangeFactor - 0.15f;
-            LastCheck.SetOrAdd(actor.thingIDNumber, (thing, maxRangeFactor));
+            float maxRangeFactor = !fromWorkGiver && LastCheck.TryGetValue(actor.thingIDNumber, out float lastMaxRangeFactor)
+                ? lastMaxRangeFactor - 0.15f
+                : DefaultMaxRangeFactor;
+            LastCheck.SetOrAdd(actor.thingIDNumber, maxRangeFactor);
             return CastPositionFinder.TryFindCastPosition(
                 new CastPositionRequest
                 {
