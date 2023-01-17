@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using RimWorld;
 using Verse;
 using Verse.AI;
 
@@ -9,8 +8,7 @@ namespace FireExtinguisher
     internal static class CastUtils
     {
         private const float DefaultMaxRangeFactor = 0.95f;
-        internal static readonly Dictionary<int, Thing> LastThing = new Dictionary<int, Thing>();
-        private static float maxRangeFactor = DefaultMaxRangeFactor;
+        internal static readonly Dictionary<int, (Thing, float)> LastCheck = new Dictionary<int, (Thing, float)>();
 
         internal static bool CanGotoCastPosition(Pawn actor, Thing thing, out IntVec3 intVec, bool fromWorkGiver)
         {
@@ -36,11 +34,10 @@ namespace FireExtinguisher
             }
             if (verb == null)
                 return false;
-            if (fromWorkGiver)
-                maxRangeFactor = DefaultMaxRangeFactor;
-            else if (LastThing.TryGetValue(actor.thingIDNumber, out Thing last) && last == thing)
-                maxRangeFactor -= 0.15f;
-            LastThing.SetOrAdd(actor.thingIDNumber, (Fire)thing);
+            float maxRangeFactor = DefaultMaxRangeFactor;
+            if (!fromWorkGiver && LastCheck.TryGetValue(actor.thingIDNumber, out (Thing thing, float maxRangeFactor) last) && last.thing == thing)
+                maxRangeFactor = last.maxRangeFactor - 0.15f;
+            LastCheck.SetOrAdd(actor.thingIDNumber, (thing, maxRangeFactor));
             return CastPositionFinder.TryFindCastPosition(
                 new CastPositionRequest
                 {

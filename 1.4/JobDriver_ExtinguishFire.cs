@@ -19,7 +19,7 @@ namespace FireExtinguisher
                 Fire fire = (Fire)pawn.CurJob.GetTarget(targetIndex);
                 if (fire != null && !fire.Destroyed)
                     return;
-                _ = CastUtils.LastThing.Remove(pawn.thingIDNumber);
+                _ = CastUtils.LastCheck.Remove(pawn.thingIDNumber);
                 pawn.records.Increment(RecordDefOf.FiresExtinguished);
                 pawn.jobs.EndCurrentJob(JobCondition.Succeeded);
             };
