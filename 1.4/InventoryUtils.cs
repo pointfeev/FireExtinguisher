@@ -77,7 +77,7 @@ namespace FireExtinguisher
                 Pawn pawn = toil.actor;
                 Pawn_JobTracker jobTracker = pawn.jobs;
                 if (GetFireExtinguisherFromEquipment(pawn) == null)
-                    _ = EquipFireExtinguisher(pawn, false);
+                    _ = EquipFireExtinguisher(pawn, !PreviousWeapons.ContainsKey(pawn.thingIDNumber));
                 if (GetFireExtinguisherFromEquipment(pawn) == null)
                     jobTracker.EndCurrentJob(JobCondition.Incompletable);
                 jobTracker.curDriver.ReadyForNextToil();
