@@ -13,7 +13,6 @@ namespace FireExtinguisher
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            yield return Toils_Combat.TrySetJobToUseAttackVerb(TargetIndex.A);
             Toil checkDestroyed = new Toil
             {
                 initAction = delegate
@@ -24,6 +23,9 @@ namespace FireExtinguisher
                     pawn.jobs.EndCurrentJob(JobCondition.Succeeded);
                 }
             };
+            Toil equip = InventoryUtils.EquipFireExtinguisherToil();
+            _ = equip.JumpIfDespawnedOrNull(TargetIndex.A, checkDestroyed);
+            yield return Toils_Combat.TrySetJobToUseAttackVerb(TargetIndex.A);
             Toil approach = CastUtils.GotoCastPosition(TargetIndex.A);
             _ = approach.JumpIfDespawnedOrNull(TargetIndex.A, checkDestroyed);
             yield return approach;
@@ -31,7 +33,7 @@ namespace FireExtinguisher
             _ = castVerb.JumpIfDespawnedOrNull(TargetIndex.A, checkDestroyed);
             yield return castVerb;
             yield return checkDestroyed;
-            yield return Toils_Jump.Jump(approach);
+            yield return Toils_Jump.Jump(equip);
         }
     }
 }

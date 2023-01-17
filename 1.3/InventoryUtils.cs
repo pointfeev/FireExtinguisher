@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
+using Verse.AI;
 using Verse.Sound;
 
 namespace FireExtinguisher
@@ -65,8 +66,24 @@ namespace FireExtinguisher
         internal static bool CanEquipFireExtinguisher(Pawn pawn)
             => !(GetFireExtinguisherFromEquipment(pawn) is null) || CanEquipFireExtinguisher(pawn, GetFireExtinguisherFromInventory(pawn));
 
-        internal static bool EquipFireExtinguisher(Pawn pawn)
-            => !(GetFireExtinguisherFromEquipment(pawn) is null) || EquipWeapon(pawn, GetFireExtinguisherFromInventory(pawn), true);
+        internal static bool EquipFireExtinguisher(Pawn pawn, bool cachePrevious = true)
+            => !(GetFireExtinguisherFromEquipment(pawn) is null) || EquipWeapon(pawn, GetFireExtinguisherFromInventory(pawn), cachePrevious);
+
+        internal static Toil EquipFireExtinguisherToil()
+        {
+            Toil toil = new Toil();
+            toil.initAction = delegate
+            {
+                Pawn pawn = toil.actor;
+                Pawn_JobTracker jobTracker = pawn.jobs;
+                if (GetFireExtinguisherFromEquipment(pawn) == null)
+                    _ = EquipFireExtinguisher(pawn, false);
+                if (GetFireExtinguisherFromEquipment(pawn) == null)
+                    jobTracker.EndCurrentJob(JobCondition.Incompletable);
+                jobTracker.curDriver.ReadyForNextToil();
+            };
+            return toil;
+        }
 
         internal static bool UnEquipFireExtinguisher(Pawn pawn)
         {

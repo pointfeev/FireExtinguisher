@@ -49,24 +49,27 @@ namespace FireExtinguisher
 
         internal static Toil GotoCastPosition(TargetIndex targetInd)
         {
-            Toil toil = new Toil();
+            Toil toil = ToilMaker.MakeToil();
             toil.initAction = delegate
             {
-                Thing thing = toil.actor.jobs.curJob.GetTarget(targetInd).Thing;
-                if (toil.actor == thing || thing == null)
+                Pawn pawn = toil.actor;
+                Pawn_JobTracker jobTracker = pawn.jobs;
+                Pawn_PathFollower pather = pawn.pather;
+                Thing thing = jobTracker.curJob.GetTarget(targetInd).Thing;
+                if (pawn == thing || thing == null)
                 {
-                    toil.actor.pather.StopDead();
-                    toil.actor.jobs.curDriver.ReadyForNextToil();
+                    pather.StopDead();
+                    jobTracker.curDriver.ReadyForNextToil();
                     return;
                 }
-                bool canGoto = CanGotoCastPosition(toil.actor, thing, out IntVec3 intVec, false);
+                bool canGoto = CanGotoCastPosition(pawn, thing, out IntVec3 intVec, false);
                 if (!canGoto)
                 {
-                    toil.actor.jobs.EndCurrentJob(JobCondition.Incompletable);
+                    jobTracker.EndCurrentJob(JobCondition.Incompletable);
                     return;
                 }
-                toil.actor.pather.StartPath(intVec, PathEndMode.OnCell);
-                toil.actor.Map.pawnDestinationReservationManager.Reserve(toil.actor, toil.actor.jobs.curJob, intVec);
+                pather.StartPath(intVec, PathEndMode.OnCell);
+                pawn.Map.pawnDestinationReservationManager.Reserve(pawn, jobTracker.curJob, intVec);
             };
             toil.defaultCompleteMode = ToilCompleteMode.PatherArrival;
             return toil;
