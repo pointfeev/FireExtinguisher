@@ -9,11 +9,7 @@ namespace FireExtinguisher
     {
         private const TargetIndex FireIndex = TargetIndex.A;
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
-        {
-            Fire fire = (Fire)job.GetTarget(FireIndex);
-            return fire != null && Map.reservationManager.CanReserve(pawn, fire) && pawn.Reserve(fire, job);
-        }
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => true;
 
         private Toil CheckDestroyedToil(TargetIndex targetIndex)
         {
