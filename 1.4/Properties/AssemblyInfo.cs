@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("FireExtinguisher")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("2021, pointfeev (https://github.com/pointfeev)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
