@@ -1,11 +1,10 @@
 ﻿using RimWorld;
 using Verse;
 
-namespace FireExtinguisher
+namespace FireExtinguisher;
+
+[DefOf]
+public static class JobDefOf_ExtinguishFire
 {
-    [DefOf]
-    public static class JobDefOf_ExtinguishFire
-    {
-        public static JobDef ExtinguishFire;
-    }
+    public static JobDef ExtinguishFire;
 }
